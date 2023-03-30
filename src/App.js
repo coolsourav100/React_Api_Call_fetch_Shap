@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import MoviesList from './components/MoviesList';
 import './App.css';
+import Loader from './components/Loader';
 
 function App() {
   const dummyMovies = [
@@ -19,10 +20,12 @@ function App() {
     },
   ];
 const [movieList , setMovieList] = useState([...dummyMovies])
+const [isLoading , setIsLoading] = useState(false)
  const fetchMiveHandler= async ()=>{
-    const responce = await fetch('https://swapi.dev/api/films/')
+   setIsLoading(true)
+   const responce = await fetch('https://swapi.dev/api/films/')
     let data = await responce.json();
-    
+    setIsLoading(false)
         const movie = data.results.map((item)=>{
           return {
             id:item.id,
@@ -42,7 +45,7 @@ const [movieList , setMovieList] = useState([...dummyMovies])
         <button onClick={fetchMiveHandler}>Fetch Movies</button>
       </section>
       <section>
-        <MoviesList movies={movieList} />
+        {isLoading ? <Loader/> : <MoviesList movies={movieList}/>}
       </section>
     </React.Fragment>
   );
